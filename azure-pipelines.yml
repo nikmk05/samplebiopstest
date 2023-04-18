@@ -10,10 +10,17 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+- task: CopyFiles@2
+  displayName: 'Copy Files to: Staging artifact'
+  inputs:
+    SourceFolder: '$(Build.SourcesDirectory)'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+    OverWrite: true
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+- task: CopyPublishBuildArtifacts@1
+  displayName: 'Copy Publish Artifact: BIOPS'
+  inputs:
+    CopyRoot: '$(Build.ArtifactStagingDirectory)'
+    Contents: '*.pbix*'
+    ArtifactName: BIOPS
+    ArtifactType: Container
